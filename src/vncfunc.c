@@ -7,7 +7,7 @@
 *   Michal Novotny <minovotn@redhat.com>
 */
 
-#include "libvirt-php.h"
+#include "vncfunc.h"
 
 #ifdef DEBUG_VNC
 #define DPRINTF(fmt, ...) \

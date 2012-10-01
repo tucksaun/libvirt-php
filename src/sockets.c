@@ -7,7 +7,7 @@
 *   Michal Novotny <minovotn@redhat.com>
 */
 
-#include "libvirt-php.h"
+#include "sockets.h"
 
 #ifdef DEBUG_SOCKETS
 #define DPRINTF(fmt, ...) \
@@ -140,7 +140,7 @@ int socket_has_data(int sfd, long maxtime, int ignoremsg)
 
 	if (!ignoremsg)
 		DPRINTF("%s: Select returned %d\n", PHPFUNC, rc);
-		
+
 	return (rc == 1);
 }
 
@@ -161,7 +161,7 @@ void socket_read(int sfd, long length)
 		DPRINTF("%s: No data appears to be available\n", PHPFUNC);
 		return;
 	}
-	
+
 	if (length == -1) {
 		DPRINTF("%s: Reading all the data from socket\n", PHPFUNC);
 		while (socket_has_data(sfd, 50000, 1) == 1)

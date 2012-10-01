@@ -16,11 +16,6 @@
 
 #include "libvirt-php.h"
 
-// From vncfunc.c
-int vnc_get_dimensions(char *server, char *port, int *width, int *height);
-// From sockets.c
-int connect_socket(char *server, char *port, int keepalive, int nodelay, int allow_server_override);
-
 #ifdef DEBUG_CORE
 #define DPRINTF(fmt, ...) \
 if (LIBVIRT_G(debug)) \
@@ -263,11 +258,6 @@ PHP_RINIT_FUNCTION(libvirt)
 	LIBVIRT_G(last_error) = NULL;
 	LIBVIRT_G(vnc_location) = NULL;
 	change_debug(0 TSRMLS_CC);
-	#if __BYTE_ORDER == __BIG_ENDIAN
-	_is_bigendian = 1;
-	#elif __BYTE_ORDER == __LITTLE_ENDIAN
-	_is_bigendian = 0;
-	#endif
 	return SUCCESS;
 }
 
