@@ -51,6 +51,6 @@ if test "$PHP_LIBXML" != "no"; then
 
   dnl AC_DEFINE(HAVE_LIBVIRT, 1, [Whether you want libvirt support])
 
-  PHP_NEW_EXTENSION(libvirt, libvirt-php.c sockets.c vncfunc.c, $ext_shared)
+  PHP_NEW_EXTENSION(libvirt, src/libvirt-php.c src/sockets.c src/vncfunc.c, $ext_shared)
 fi
 

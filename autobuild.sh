@@ -5,8 +5,6 @@ set -v
 
 make distclean || :
 
-aclocal
-autoreconf -i -f
 #phpize
 
 PHPEDIR=`php-config --extension-dir | sed -s "s,/usr,$AUTOBUILD_INSTALL_ROOT,"`
