@@ -53,7 +53,6 @@
 #endif
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
 #include "../config.h"
 #endif
 
@@ -84,7 +83,7 @@ ZEND_END_MODULE_GLOBALS(libvirt)
 #define LIBVIRT_G(v) (libvirt_globals.v)
 #endif
 
-#define PHP_LIBVIRT_WORLD_VERSION VERSION
+#define PHP_LIBVIRT_WORLD_VERSION PACKAGE_VERSION
 #define PHP_LIBVIRT_WORLD_EXTNAME "libvirt"
 
 /* Domain flags */
@@ -340,8 +339,10 @@ PHP_FUNCTION(libvirt_get_iso_images);
 PHP_FUNCTION(libvirt_image_create);
 PHP_FUNCTION(libvirt_image_remove);
 /* Debugging functions */
+#ifdef DEBUG_SUPPORT
 PHP_FUNCTION(libvirt_logfile_set);
 PHP_FUNCTION(libvirt_print_binding_resources);
+#endif
 
 extern zend_module_entry libvirt_module_entry;
 #define phpext_libvirt_ptr &libvirt_module_entry

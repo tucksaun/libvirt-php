@@ -7634,7 +7634,7 @@ PHP_FUNCTION(libvirt_version)
 PHP_FUNCTION(libvirt_check_version)
 {
 	unsigned long libVer;
-	int major = -1, minor = -1, micro = -1, type = VIR_VERSION_BINDING;
+	unsigned long major = -1, minor = -1, micro = -1, type = VIR_VERSION_BINDING;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lll|l", &major, &minor, &micro, &type) == FAILURE) {
 		set_error("Invalid arguments" TSRMLS_CC);
@@ -7644,7 +7644,7 @@ PHP_FUNCTION(libvirt_check_version)
 	if (virGetVersion(&libVer,NULL,NULL) != 0)
 		RETURN_FALSE;
 
-	DPRINTF("%s: Checking for version %d.%d.%d of %s\n", PHPFUNC, major, minor, micro,
+	DPRINTF("%s: Checking for version %lu.%lu.%lu of %s\n", PHPFUNC, major, minor, micro,
 			(type == VIR_VERSION_BINDING) ? "php bindings" :
 			((type == VIR_VERSION_LIBVIRT) ? "libvirt" : "unknown"));
 

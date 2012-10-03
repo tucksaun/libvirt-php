@@ -1,4 +1,30 @@
 dnl config.m4 for extension libvirt-php
+AC_DEFUN([AC_INIT], [
+  VERSION="$2"
+
+  AC_DEFINE_UNQUOTED([PACKAGE], ["$1"], [Name of package])
+  AC_DEFINE_UNQUOTED([VERSION], ["$2"], [Version number of package])
+
+  AC_DEFINE_UNQUOTED([PACKAGE_NAME], ["$1"], [Define to the full name of this package])
+  AC_DEFINE_UNQUOTED([PACKAGE_VERSION], ["$2"], [Define to the version of this package.])
+
+  AC_DEFINE_UNQUOTED([PACKAGE_STRING], ["$1 $2"], [Define to the full name and version of this package.])
+
+  AC_DEFINE_UNQUOTED([PACKAGE_URL], ["$3"], [Define to the home page for this package.])
+  AC_DEFINE_UNQUOTED([PACKAGE_BUGREPORT], ["$3"], [Define to the address where bug reports for this package should be sent.])
+])
+
+AC_INIT([libvirt-php], [0.4.6], [http://libvirt.org/php.html])
+
+dnl Get the version information at compile-time
+VERSION_MAJOR=`echo $VERSION | awk -F. '{print $1}'`
+VERSION_MINOR=`echo $VERSION | awk -F. '{print $2}'`
+VERSION_MICRO=`echo $VERSION | awk -F. '{print $3}'`
+
+AC_DEFINE_UNQUOTED(VERSION_MAJOR, $VERSION_MAJOR, [Major version number of package])
+AC_DEFINE_UNQUOTED(VERSION_MINOR, $VERSION_MINOR, [Minor version number of package])
+AC_DEFINE_UNQUOTED(VERSION_MICRO, $VERSION_MICRO, [Micro version number of package])
+
 
 PHP_ARG_WITH(libvirt, for libvirt support,
 [  --with-libvirt[=DIR]       Include libvirt support])
@@ -27,7 +53,10 @@ if test "$PHP_LIBXML" != "no"; then
 
   PHP_SUBST(LIBXML_SHARED_LIBADD)
   PHP_ADD_LIBRARY_WITH_PATH(xml2, $LIBXML_DIR/lib, LIBXML_SHARED_LIBADD)
+fi
 
+
+if test "$PHP_LIBVIRT" != "no"; then
   if test -r $PHP_LIBVIRT/lib/libvirt.a; then
     LIBVIRT_DIR=$PHP_LIBVIRT
   else
@@ -53,4 +82,3 @@ if test "$PHP_LIBXML" != "no"; then
 
   PHP_NEW_EXTENSION(libvirt, src/libvirt-php.c src/sockets.c src/vncfunc.c, $ext_shared)
 fi
-

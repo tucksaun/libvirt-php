@@ -1,6 +1,11 @@
+--TEST--
+max_connections
+--SKIPIF--
 <?php
-	require_once('functions.phpt');
-
+	require_once('skipif.inc');
+?>
+--FILE--
+<?php
 	ob_start();
 	PHPInfo();
 	$s = ob_get_contents();
@@ -14,14 +19,14 @@
 	$num = $num_ini + 1;
 
 	for ($i = 0; $i < $num; $i++)
-		$conn[] = libvirt_connect('null', false);
+		$conn[] = libvirt_connect('test:///default', false);
 
 	$tmp = libvirt_print_binding_resources();
 	if (sizeof($tmp) > $num_ini)
-		bail('Allocated '.sizeof($tmp).' connection resources but limits seems to be set to '.$num_ini.' resources');
+		die('Allocated '.sizeof($tmp).' connection resources but limits seems to be set to '.$num_ini.' resources');
 
 	for ($i = 0; $i < $num; $i++)
 		unset($conn[$i]);
-
-	success( basename(__FILE__) );
 ?>
+--EXPECTF--
+Warning: libvirt_connect(): Maximum number of connections allowed exceeded in %s on %s

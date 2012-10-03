@@ -1,3 +1,10 @@
+--TEST--
+test install
+--SKIPIF--
+<?php
+	require_once('skipif.inc');
+?>
+--FILE--
 <?php
 	$logfile = 'test-install.log';
 	unlink($logfile);
@@ -10,11 +17,9 @@
 	$show_vnc_location = false;
 	$memory = 64;
 
-	require_once('functions.phpt');
-
-	$conn = libvirt_connect('null', false); /* Enable read-write connection */
+	$conn = libvirt_connect('test:///default', false); /* Enable read-write connection */
 	if (!is_resource($conn))
-		bail('Connection to default hypervisor failed');
+		die('Connection to default hypervisor failed');
 
 	$disks = array(
 			array( 'path' => $disk_image, 'driver' => 'raw', 'bus' => 'ide', 'dev' => 'hda', 'size' => '1M',
@@ -34,14 +39,14 @@
 
 	$res = libvirt_domain_new($conn, $name, false, $memory, $memory, 1, $image, $disks, $networks, $flags);
 	if ($res == false)
-		bail('Installation test failed with error: '.libvirt_get_last_error().'. More info saved into '.$logfile);
+		die('Installation test failed with error: '.libvirt_get_last_error().'. More info saved into '.$logfile);
 
 	$ok = is_resource($res);
 
 	$vncloc = libvirt_domain_new_get_vnc();
 
 	if (!libvirt_domain_destroy($res))
-		bail('Domain destroy failed with error: '.libvirt_get_last_error().'. More info saved into '.$logfile);
+		die('Domain destroy failed with error: '.libvirt_get_last_error().'. More info saved into '.$logfile);
 
 	unset($res);
 
@@ -58,8 +63,10 @@
 	if ($ok) {
 		if ($show_vnc_location)
 			echo "VNC Server location is: $vncloc\n";
-		success( basename(__FILE__) );
+		printf('!done');
 	}
 	else
-		bail('Invalid domain resource');
+		die('Invalid domain resource');
 ?>
+--EXPECT--
+!done

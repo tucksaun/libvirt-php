@@ -1,2 +1,0 @@
-check:
-	./runtests-report.sh

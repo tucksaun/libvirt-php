@@ -1,40 +1,46 @@
+--TEST--
+logging
+--SKIPIF--
+<?php
+	require_once('skipif.inc');
+	if(!function_exists('libvirt_logfile_set')) print('please compile libvirt-php with debug support')
+?>
+--FILE--
 <?php
 	$logfile = 'test.log';
 
-	require_once('functions.phpt');
-
-	unlink($logfile);
+	@unlink($logfile);
 	if (!libvirt_logfile_set($logfile, 1))
-		bail('Cannot enable debug logging to test.log file');
+		die('Cannot enable debug logging to test.log file');
 
-	$conn = libvirt_connect('null');
+	$conn = libvirt_connect('test:///default');
 	if (!is_resource($conn))
-		bail('Connection to default hypervisor failed');
+		die('Connection to default hypervisor failed');
 
 	$res = libvirt_node_get_info($conn);
 	if (!is_array($res))
-		bail('Node get info doesn\'t return an array');
+		die('Node get info doesn\'t return an array');
 
 	if (!is_numeric($res['memory']))
-		bail('Invalid memory size');
+		die('Invalid memory size');
 	if (!is_numeric($res['cpus']))
-		bail('Invalid CPU core count');
+		die('Invalid CPU core count');
 	unset($res);
 
 	if (!libvirt_connect_get_uri($conn))
-		bail('Invalid URI value');
+		die('Invalid URI value');
 
 	if (!libvirt_connect_get_hostname($conn))
-		bail('Invalid hostname value');
+		die('Invalid hostname value');
 
 	if (!($res = libvirt_domain_get_counts($conn)))
-		bail('Invalid domain count');
+		die('Invalid domain count');
 
 	if ($res['active'] != count( libvirt_list_active_domains($conn)))
-		bail('Numbers of active domains mismatch');
+		die('Numbers of active domains mismatch');
 
 	if ($res['inactive'] != count( libvirt_list_inactive_domains($conn)))
-		bail('Numbers of inactive domains mismatch');
+		die('Numbers of inactive domains mismatch');
 
 	if (libvirt_connect_get_hypervisor($conn) == false)
 		echo "Warning: Getting hypervisor information failed!\n";
@@ -43,10 +49,10 @@
 		echo "Warning: Cannot get the maximum number of VCPUs per VM!\n";
 
 	if (libvirt_connect_get_capabilities($conn) == false)
-		bail('Invalid capabilities on the hypervisor connection');
+		die('Invalid capabilities on the hypervisor connection');
 
 	if (libvirt_connect_get_information($conn) == false)
-		bail('No information on the connection are available');
+		die('No information on the connection are available');
 
 	unset($res);
 	unset($conn);
@@ -61,7 +67,9 @@
 	unlink($logfile);
 
 	if (!$ok)
-		bail('Missing entries in the log file');
+		die('Missing entries in the log file');
 
-	success( basename(__FILE__) );
+	printf('!done');
 ?>
+--EXPECT--
+!done
