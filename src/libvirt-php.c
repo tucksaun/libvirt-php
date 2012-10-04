@@ -195,8 +195,8 @@ static zend_function_entry libvirt_functions[] = {
 	PHP_FE(libvirt_image_create, NULL)
 	PHP_FE(libvirt_image_remove, NULL)
 	/* Debugging functions */
-	#ifdef DEBUG_SUPPORT
 	PHP_FE(libvirt_logfile_set, NULL)
+	#ifdef DEBUG_SUPPORT
 	PHP_FE(libvirt_print_binding_resources, NULL)
 	#endif
 	{NULL, NULL, NULL}
@@ -235,8 +235,10 @@ PHP_INI_END()
 
 void change_debug(int val TSRMLS_DC)
 {
+	#ifdef DEBUG_SUPPORT
 	LIBVIRT_G(debug) = val;
 	gdebug = val;
+	#endif
 }
 
 /* PHP requires to have this function defined */
@@ -7777,7 +7779,6 @@ PHP_FUNCTION(libvirt_print_binding_resources)
 		RETURN_FALSE;
 }
 
-#ifdef DEBUG_SUPPORT
 /*
 	Function name:		libvirt_logfile_set
 	Since version:		0.4.2
@@ -7812,5 +7813,3 @@ PHP_FUNCTION(libvirt_logfile_set)
 
 	RETURN_TRUE;
 }
-#endif
-

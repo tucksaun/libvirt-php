@@ -25,12 +25,22 @@ AC_DEFINE_UNQUOTED(VERSION_MAJOR, $VERSION_MAJOR, [Major version number of packa
 AC_DEFINE_UNQUOTED(VERSION_MINOR, $VERSION_MINOR, [Minor version number of package])
 AC_DEFINE_UNQUOTED(VERSION_MICRO, $VERSION_MICRO, [Micro version number of package])
 
+if test "$PHP_DEBUG" != "yes"; then
+  PHP_ARG_ENABLE(debug, for debug support,
+  [  --enable-debug          Enable debug support], no, no)
+else
+  PHP_DEBUG="yes"
+fi
+
+if test "$PHP_DEBUG" != "no"; then
+  AC_DEFINE(DEBUG_SUPPORT, 1, [Enable debug support])
+fi
 
 PHP_ARG_WITH(libvirt, for libvirt support,
-[  --with-libvirt[=DIR]       Include libvirt support])
+[  --with-libvirt[=DIR]      Include libvirt support])
 
 PHP_ARG_WITH(libxml, for XML support,
-[  --with-libxml[=DIR]        Include libvirt support])
+[  --with-libxml[=DIR]       Include libvirt support])
 
 if test "$PHP_LIBXML" != "no"; then
   if test -r $PHP_LIBXML/libxml/xmlstring.h; then

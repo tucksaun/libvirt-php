@@ -171,8 +171,8 @@ int vnc_refresh_screen(char *server, char *port, int scancode);
 int vnc_send_keys(char *server, char *port, char *keys);
 int vnc_send_pointer_event(char *server, char *port, int pos_x, int pos_y, int clicked, int release);
 
-int set_logfile(char *filename, long maxsize TSRMLS_DC);
 char *get_datetime(void);
+int set_logfile(char *filename, long maxsize TSRMLS_DC);
 #ifdef DEBUG_SUPPORT
 int gdebug;
 #endif
@@ -337,8 +337,8 @@ PHP_FUNCTION(libvirt_get_iso_images);
 PHP_FUNCTION(libvirt_image_create);
 PHP_FUNCTION(libvirt_image_remove);
 /* Debugging functions */
-#ifdef DEBUG_SUPPORT
 PHP_FUNCTION(libvirt_logfile_set);
+#ifdef DEBUG_SUPPORT
 PHP_FUNCTION(libvirt_print_binding_resources);
 #endif
 

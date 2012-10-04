@@ -3,6 +3,7 @@ max_connections
 --SKIPIF--
 <?php
 	require_once('skipif.inc');
+	if(!function_exists('libvirt_print_binding_resources')) die('skip please compile libvirt-php with debug support');
 ?>
 --FILE--
 <?php

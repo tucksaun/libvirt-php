@@ -3,7 +3,7 @@ logging
 --SKIPIF--
 <?php
 	require_once('skipif.inc');
-	if(!function_exists('libvirt_logfile_set')) print('please compile libvirt-php with debug support')
+	if(!function_exists('libvirt_print_binding_resources')) die('skip please compile libvirt-php with debug support');
 ?>
 --FILE--
 <?php
@@ -64,7 +64,7 @@ logging
 	$ok = ((strpos($log, 'libvirt_connect: Connection')) &&
 		(strpos($log, 'libvirt_connection_dtor: virConnectClose')));
 
-	unlink($logfile);
+	@unlink($logfile);
 
 	if (!$ok)
 		die('Missing entries in the log file');

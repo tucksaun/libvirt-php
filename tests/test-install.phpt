@@ -7,7 +7,7 @@ test install
 --FILE--
 <?php
 	$logfile = 'test-install.log';
-	unlink($logfile);
+	@unlink($logfile);
 	libvirt_logfile_set($logfile, 10);
 
 	$name = 'test-'.rand(0, 999);
@@ -58,7 +58,7 @@ test install
 	unset($conn);
 
 	@unlink($disk_image);
-	unlink($logfile);
+	@unlink($logfile);
 
 	if ($ok) {
 		if ($show_vnc_location)
