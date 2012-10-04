@@ -195,8 +195,10 @@ static zend_function_entry libvirt_functions[] = {
 	PHP_FE(libvirt_image_create, NULL)
 	PHP_FE(libvirt_image_remove, NULL)
 	/* Debugging functions */
+	#ifdef DEBUG_SUPPORT
 	PHP_FE(libvirt_logfile_set, NULL)
 	PHP_FE(libvirt_print_binding_resources, NULL)
+	#endif
 	{NULL, NULL, NULL}
 };
 
@@ -2399,7 +2401,7 @@ char *connection_get_domain_type(virConnectPtr conn, char *arch TSRMLS_DC)
 
 	DPRINTF("%s: Requested domain type for arch '%s'\n",  __FUNCTION__, arch);
 
-	snprintf(xpath, sizeof(xpath), "//capabilities/guest/arch[@name='%s']/domain/emulator/../@type", arch);
+	snprintf(xpath, sizeof(xpath), "//capabilities/guest/arch[@name='%s']/domain/@type", arch);
 	DPRINTF("%s: Applying xPath '%s' to capabilities XML output\n", __FUNCTION__, xpath);
 	tmp = get_string_from_xpath(caps, xpath, NULL, &retval);
 	if ((tmp == NULL) || (retval < 0)) {
@@ -2532,16 +2534,15 @@ char *generate_uuid(virConnectPtr conn TSRMLS_DC)
 {
 	virDomainPtr domain=NULL;
 	char *uuid = NULL;
+	int old_error_reporting = EG(error_reporting);
+	EG(error_reporting) = 0;
 
 	uuid = generate_uuid_any();
-	domain = virDomainLookupByUUIDString(conn, uuid);
-	if (domain != NULL) {
+	while ((domain = virDomainLookupByUUIDString(conn, uuid)) != NULL) {
 		virDomainFree(domain);
-		while ((domain = virDomainLookupByUUIDString(conn, uuid)) != NULL) {
-			virDomainFree(domain);
-			uuid = generate_uuid_any();
-		}
+		uuid = generate_uuid_any();
 	}
+	EG(error_reporting) = old_error_reporting;
 
 	DPRINTF("%s: Generated new UUID '%s'\n", __FUNCTION__, uuid);
 	return uuid;
@@ -3684,7 +3685,7 @@ PHP_FUNCTION(libvirt_domain_new)
 	int arch_len;
 	char *tmp;
 	char *name;
-	char name_len=0;
+	int name_len=0;
 	// char *emulator;
 	char *iso_image = NULL;
 	int iso_image_len;
@@ -3716,7 +3717,7 @@ PHP_FUNCTION(libvirt_domain_new)
 	if ((arch == NULL) || (arch_len == 0))
 		arch = NULL;
 
-	//DPRINTF("%s: name: %s, arch: %s, memMB: %d, maxmemMB: %d, vcpus: %d, iso_image: %s\n", PHPFUNC, name, arch, memMB, maxmemMB, vcpus, iso_image);
+	// DPRINTF("%s: name: %s, arch: %s, memMB: %d, maxmemMB: %d, vcpus: %d, iso_image: %s\n", PHPFUNC, name, arch, memMB, maxmemMB, vcpus, iso_image);
 	if (memMB == 0)
 		memMB = maxmemMB;
 
@@ -6861,19 +6862,17 @@ PHP_FUNCTION(libvirt_list_active_domains)
 		domain=virDomainLookupByID(conn->conn,ids[i]);
 		if (domain!=NULL)
 		{
-			resource_change_counter(INT_RESOURCE_DOMAIN, conn->conn, domain, 1 TSRMLS_CC);
 			name=virDomainGetName(domain);
+			if (virDomainFree (domain))
+				resource_change_counter(INT_RESOURCE_DOMAIN, conn->conn, domain, 0 TSRMLS_CC);
+
 			if (name==NULL)
 			{
 				efree (ids);
-				if (virDomainFree (domain))
-					resource_change_counter(INT_RESOURCE_DOMAIN, conn->conn, domain, 0 TSRMLS_CC);
 				RETURN_FALSE;
 			}
 
 			add_next_index_string(return_value, name, 1);
-			if (virDomainFree (domain))
-				resource_change_counter(INT_RESOURCE_DOMAIN, conn->conn, domain, 0 TSRMLS_CC);
 		}
 	}
 	efree(ids);
@@ -6897,7 +6896,6 @@ PHP_FUNCTION(libvirt_list_inactive_domains)
 
 	GET_CONNECTION_FROM_ARGS("r",&zconn);
 
-	array_init(return_value);
 	expectedcount=virConnectNumOfDefinedDomains (conn->conn);
 
 	names=emalloc(expectedcount*sizeof(char *));
@@ -6907,6 +6905,8 @@ PHP_FUNCTION(libvirt_list_inactive_domains)
 		efree (names);
 		RETURN_FALSE;
 	}
+
+	array_init(return_value);
 	for (i=0;i<count;i++)
 	{
 		add_next_index_string(return_value,  names[i],1);
@@ -7789,7 +7789,7 @@ PHP_FUNCTION(libvirt_print_binding_resources)
 PHP_FUNCTION(libvirt_logfile_set)
 {
 	char *filename = NULL;
-	int maxsize = DEFAULT_LOG_MAXSIZE;
+	long maxsize = DEFAULT_LOG_MAXSIZE;
 	int filename_len = 0;
 	int err;
 

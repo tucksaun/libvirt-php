@@ -10,8 +10,8 @@ test install
 	unlink($logfile);
 	libvirt_logfile_set($logfile, 10);
 
-	$name = 'test';
-	$image = '/tmp/test-libvirt-php.tmp';
+	$name = 'test-'.rand(0, 999);
+	$image = __DIR__.'/data/test-libvirt-php.img';
 	$disk_image = '/tmp/test-libvirt-php.img';
 	$local_test = true;
 	$show_vnc_location = false;

@@ -17,13 +17,6 @@
 #ifndef PHP_LIBVIRT_H
 #define PHP_LIBVIRT_H 1
 
-#define DEBUG_SUPPORT
-
-#ifdef DEBUG_SUPPORT
-#define DEBUG_CORE
-#define DEBUG_VNC
-#endif
-
 #define ARRAY_CARDINALITY(array)	(sizeof(array) / sizeof(array[0]))
 
 /* Maximum size (in KiB) of log file when DEBUG_SUPPORT is enabled */
@@ -54,6 +47,11 @@
 
 #ifdef HAVE_CONFIG_H
 #include "../config.h"
+#endif
+
+#ifdef DEBUG_SUPPORT
+#define DEBUG_CORE
+#define DEBUG_VNC
 #endif
 
 typedef struct _resource_info {

@@ -3,10 +3,11 @@ domain_snapshot
 --SKIPIF--
 <?php
 	require_once('skipif.inc');
+	if(!libvirt_connect()) die("skip this test need an real hypervisor");
 ?>
 --FILE--
 <?php
-	$conn = libvirt_connect('test:///default', false);
+	$conn = libvirt_connect(NULL, false);
 	if (!is_resource($conn))
 		die('Connection to default hypervisor failed');
 

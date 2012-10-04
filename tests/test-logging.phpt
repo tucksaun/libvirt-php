@@ -41,6 +41,7 @@ logging
 
 	if ($res['inactive'] != count( libvirt_list_inactive_domains($conn)))
 		die('Numbers of inactive domains mismatch');
+	unset($res);
 
 	if (libvirt_connect_get_hypervisor($conn) == false)
 		echo "Warning: Getting hypervisor information failed!\n";
@@ -51,10 +52,9 @@ logging
 	if (libvirt_connect_get_capabilities($conn) == false)
 		die('Invalid capabilities on the hypervisor connection');
 
-	if (libvirt_connect_get_information($conn) == false)
+	if (@libvirt_connect_get_information($conn) == false)
 		die('No information on the connection are available');
 
-	unset($res);
 	unset($conn);
 
 	$fp = fopen($logfile, 'r');
