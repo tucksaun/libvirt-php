@@ -90,5 +90,17 @@ if test "$PHP_LIBVIRT" != "no"; then
 
   dnl AC_DEFINE(HAVE_LIBVIRT, 1, [Whether you want libvirt support])
 
-  PHP_NEW_EXTENSION(libvirt, src/libvirt-php.c src/sockets.c src/vncfunc.c, $ext_shared)
 fi
+
+TOOLS_DIR="tools"
+DOC_DIR="docs"
+SUBDIRS="$TOOLS_DIR $DOC_DIR"
+EXTRA_DIST="libvirt-php.spec.in"
+PHP_SUBST(TOOLS_DIR)
+PHP_SUBST(DOC_DIR)
+PHP_SUBST(SUBDIRS)
+PHP_SUBST(EXTRA_DIST)
+
+PHP_NEW_EXTENSION(libvirt, src/libvirt-php.c src/sockets.c src/vncfunc.c, $ext_shared)
+
+PHP_ADD_MAKEFILE_FRAGMENT
