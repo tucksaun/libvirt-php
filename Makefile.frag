@@ -1,5 +1,5 @@
+.PHONY: doc
 doc:
-    cd "$(top_srcdir)/$(TOOLS_DIR)"
-    $(CC) -Wall -o generate-api-docs generate-api-docs.c
-    ./generate-api-docs $(top_srcdir)/$src/libvirt-php.c $(top_srcdir)/$(DOC_DIR)/api-reference.html.in
-    ./generate-api-docs --private $(top_srcdir)/$src/libvirt-php.c $(top_srcdir)/$(DOC_DIR)/dev-api-reference.html.in
+	$(CC) $(CFLAGS) -Wall -o $(TOOLS_DIR)/generate-api-docs $(TOOLS_DIR)/generate-api-docs.c
+	./$(TOOLS_DIR)/generate-api-docs $(top_srcdir)/src/libvirt-php.c $(top_builddir)/$(DOC_DIR)/api-reference.html.in
+	./$(TOOLS_DIR)/generate-api-docs --private $(top_srcdir)/src/libvirt-php.c $(top_builddir)/$(DOC_DIR)/dev-api-reference.html.in

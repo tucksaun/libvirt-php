@@ -123,8 +123,9 @@ void free_functions(int function_number)
 	int i, j;
 
 	for (i = 0; i <= function_number; i++) {
-		for (j = 0; j < functions[i].num_args; j++)
+		for (j = 0; j < functions[i].num_args; j++){
 			free(functions[i].args[j]);
+		}
 		free(functions[i].name);
 		free(functions[i].desc);
 		free(functions[i].returns);
@@ -188,6 +189,7 @@ int main(int argc, char *argv[])
 			in_comment = 1;
 			functions = (func_t *) realloc( functions, sizeof(func_t) * (function_number + 1) );
 			functions[function_number].name = NULL;
+			functions[function_number].num_args = 0;
 		}
 		else
 		if (strcmp(line, "*/") == 0)
