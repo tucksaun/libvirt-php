@@ -46,9 +46,9 @@ typedef uint64_t arch_uint;
 #define GETUINT32(var)  (uint32_t)(((uint32_t)var[0] << 24) + ((uint32_t)var[1] << 16) + ((uint32_t)var[2] << 8) + ((uint32_t)var[3]))
 
 #if __BYTE_ORDER == __BIG_ENDIAN
-#define IS_BIGENDIAN  true
+#define IS_BIGENDIAN  1
 #elif __BYTE_ORDER == __LITTLE_ENDIAN
-#define IS_BIGENDIAN  false
+#define IS_BIGENDIAN  0
 #endif
 
 #define SWAP2_BY_ENDIAN(le, v1, v2) (((le && IS_BIGENDIAN) || (!le && !IS_BIGENDIAN)) ? ((v2 << 8) + v1) : ((v1 << 8) + v2))
