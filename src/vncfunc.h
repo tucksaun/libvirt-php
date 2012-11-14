@@ -6,6 +6,26 @@
 
 #include "common.h"
 
+#define UC(a)           (unsigned char)a
+#define CALC_UINT32(a, b, c, d) (uint32_t)((a >> 24) + (b >> 16) + (c >> 8) + d)
+
+typedef struct tServerFBParams {
+    int width;
+    int height;
+    int bpp;
+    int depth;
+    int bigEndian;
+    int trueColor;
+    int maxRed;
+    int maxGreen;
+    int maxBlue;
+    int shiftRed;
+    int shiftGreen;
+    int shiftBlue;
+    int desktopNameLen;
+    unsigned char *desktopName;
+} tServerFBParams;
+
 typedef struct tBMPFile {
     uint32_t filesz;
     uint16_t creator1;

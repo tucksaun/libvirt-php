@@ -24,34 +24,24 @@
 
 /* Network constants */
 #define	VIR_NETWORKS_ACTIVE		1
-#define	VIR_NETWORKS_INACTIVE		2
+#define	VIR_NETWORKS_INACTIVE	2
 
 /* Version constants */
 #define	VIR_VERSION_BINDING		1
 #define	VIR_VERSION_LIBVIRT		2
 
-#include "php.h"
 #include "common.h"
-#undef PACKAGE_BUGREPORT
-#undef PACKAGE_NAME
-#undef PACKAGE_STRING
-#undef PACKAGE_TARNAME
-#undef PACKAGE_URL
-#undef PACKAGE_VERSION
 
 #ifdef ZTS
 #include "TSRM.h"
-#endif
-
-#endif
-
-#ifdef HAVE_CONFIG_H
-#include "../config.h"
+#define LIBVIRT_G(v) TSRMG(libvirt_globals_id, zend_libvirt_globals *, v)
+#else
+#define LIBVIRT_G(v) (libvirt_globals.v)
 #endif
 
 #ifdef DEBUG_SUPPORT
-#define DEBUG_CORE
-#define DEBUG_VNC
+int gdebug;
+PHP_FUNCTION(libvirt_print_binding_resources);
 #endif
 
 typedef struct _resource_info {
@@ -75,14 +65,8 @@ ZEND_BEGIN_MODULE_GLOBALS(libvirt)
 	int binding_resources_count;
 ZEND_END_MODULE_GLOBALS(libvirt)
 
-#ifdef ZTS
-#define LIBVIRT_G(v) TSRMG(libvirt_globals_id, zend_libvirt_globals *, v)
-#else
-#define LIBVIRT_G(v) (libvirt_globals.v)
-#endif
-
-#define PHP_LIBVIRT_WORLD_VERSION PACKAGE_VERSION
-#define PHP_LIBVIRT_WORLD_EXTNAME "libvirt"
+#define PHP_LIBVIRT_WORLD_VERSION 	PACKAGE_VERSION
+#define PHP_LIBVIRT_WORLD_EXTNAME 	"libvirt"
 
 /* Domain flags */
 #define DOMAIN_FLAG_FEATURE_ACPI	0x01
@@ -93,17 +77,17 @@ ZEND_END_MODULE_GLOBALS(libvirt)
 #define DOMAIN_FLAG_SOUND_AC97		0x20
 
 /* Domain disk flags */
-#define DOMAIN_DISK_FILE		0x01
-#define DOMAIN_DISK_BLOCK		0x02
+#define DOMAIN_DISK_FILE			0x01
+#define DOMAIN_DISK_BLOCK			0x02
 #define DOMAIN_DISK_ACCESS_ALL		0x04
 
 /* Internal resource identifier objects */
 #define INT_RESOURCE_CONNECTION		0x01
-#define INT_RESOURCE_DOMAIN		0x02
+#define INT_RESOURCE_DOMAIN			0x02
 #define INT_RESOURCE_NETWORK		0x04
 #define INT_RESOURCE_NODEDEV		0x08
 #define INT_RESOURCE_STORAGEPOOL	0x10
-#define INT_RESOURCE_VOLUME		0x20
+#define INT_RESOURCE_VOLUME			0x20
 #define INT_RESOURCE_SNAPSHOT		0x40
 
 typedef struct tVMDisk {
@@ -171,20 +155,14 @@ int vnc_refresh_screen(char *server, char *port, int scancode);
 int vnc_send_keys(char *server, char *port, char *keys);
 int vnc_send_pointer_event(char *server, char *port, int pos_x, int pos_y, int clicked, int release);
 
-char *get_datetime(void);
-int set_logfile(char *filename, long maxsize TSRMLS_DC);
-#ifdef DEBUG_SUPPORT
-int gdebug;
-#endif
-
-#define PHP_LIBVIRT_CONNECTION_RES_NAME "Libvirt connection"
-#define PHP_LIBVIRT_DOMAIN_RES_NAME "Libvirt domain"
-#define PHP_LIBVIRT_STORAGEPOOL_RES_NAME "Libvirt storagepool"
-#define PHP_LIBVIRT_VOLUME_RES_NAME "Libvirt volume"
-#define PHP_LIBVIRT_NETWORK_RES_NAME "Libvirt virtual network"
-#define PHP_LIBVIRT_NODEDEV_RES_NAME "Libvirt node device"
+#define PHP_LIBVIRT_CONNECTION_RES_NAME 	"Libvirt connection"
+#define PHP_LIBVIRT_DOMAIN_RES_NAME 		"Libvirt domain"
+#define PHP_LIBVIRT_STORAGEPOOL_RES_NAME	"Libvirt storagepool"
+#define PHP_LIBVIRT_VOLUME_RES_NAME 		"Libvirt volume"
+#define PHP_LIBVIRT_NETWORK_RES_NAME 		"Libvirt virtual network"
+#define PHP_LIBVIRT_NODEDEV_RES_NAME 		"Libvirt node device"
 #if LIBVIR_VERSION_NUMBER>=8000
-#define PHP_LIBVIRT_SNAPSHOT_RES_NAME "Libvirt domain snapshot"
+#define PHP_LIBVIRT_SNAPSHOT_RES_NAME 		"Libvirt domain snapshot"
 #endif
 
 PHP_MINIT_FUNCTION(libvirt);
@@ -338,9 +316,7 @@ PHP_FUNCTION(libvirt_image_create);
 PHP_FUNCTION(libvirt_image_remove);
 /* Debugging functions */
 PHP_FUNCTION(libvirt_logfile_set);
-#ifdef DEBUG_SUPPORT
-PHP_FUNCTION(libvirt_print_binding_resources);
-#endif
 
 extern zend_module_entry libvirt_module_entry;
 #define phpext_libvirt_ptr &libvirt_module_entry
+#endif

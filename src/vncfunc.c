@@ -18,29 +18,6 @@ do { fprintf(stderr, "[%s ", get_datetime()); fprintf(stderr, "libvirt-php/vnc  
 do {} while(0)
 #endif
 
-/* Function macro */
-#define	PHPFUNC	__FUNCTION__
-
-#define UC(a)			(unsigned char)a
-#define CALC_UINT32(a, b, c, d) (uint32_t)((a >> 24) + (b >> 16) + (c >> 8) + d)
-
-typedef struct tServerFBParams {
-	int width;
-	int height;
-	int bpp;
-	int depth;
-	int bigEndian;
-	int trueColor;
-	int maxRed;
-	int maxGreen;
-	int maxBlue;
-	int shiftRed;
-	int shiftGreen;
-	int shiftBlue;
-	int desktopNameLen;
-	unsigned char *desktopName;
-} tServerFBParams;
-
 /*
 	Private function name:	vnc_write_client_version
 	Since version:		0.4.3
@@ -198,7 +175,7 @@ tServerFBParams vnc_parse_fb_params(unsigned char *buf, int len)
 
 	nlen = (int)CALC_UINT32(buf[20], buf[21], buf[22], buf[23]);
 	params.desktopNameLen = nlen;
-	params.desktopName = strdup((char *)buf + 24);
+	params.desktopName =  (unsigned char*) strdup((char *)buf + 24);
 
 	DPRINTF("%s: Desktop name set to '%s'\n", PHPFUNC, params.desktopName);
 

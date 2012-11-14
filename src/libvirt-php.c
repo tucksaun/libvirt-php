@@ -25,9 +25,6 @@ do { fprintf(stderr, "[%s ", get_datetime()); fprintf(stderr, "libvirt-php/core 
 do {} while(0)
 #endif
 
-/* PHP functions are prefixed with `zif_` so strip it */
-#define	PHPFUNC	(__FUNCTION__ + 4)
-
 /* Additional binaries */
 char *features[] = { "screenshot", "create-image", NULL };
 char *features_binaries[] = { "/usr/bin/gvnccapture", "/usr/bin/qemu-img", NULL };
@@ -251,7 +248,6 @@ static void php_libvirt_init_globals(zend_libvirt_globals *libvirt_globals TSRML
 	libvirt_globals->binding_resources_count = 0;
 	libvirt_globals->binding_resources = NULL;
 	#ifdef DEBUG_SUPPORT
-	libvirt_globals->debug = 0;
 	change_debug(0 TSRMLS_CC);
 	#endif
 }
@@ -2593,7 +2589,7 @@ char *get_disk_xml(unsigned long long size, char *path, char *driver, char *bus,
 		snprintf(cmd, sizeof(cmd), "%s create -f %s %s %ldM > /dev/null &2>/dev/null", qemu_img_cmd, driver, path, size);
 		free(qemu_img_cmd);
 
-		char *cmdRet = system(cmd);
+		int cmdRet = system(cmd);
 		ret = WEXITSTATUS(cmdRet);
 		DPRINTF("%s: Command '%s' finished with error code %d\n", __FUNCTION__, cmd, ret);
 		if (ret != 0) {
@@ -3363,7 +3359,7 @@ PHP_FUNCTION(libvirt_domain_send_keys)
 	char *xml = NULL;
 	char *hostname = NULL;
 	int hostname_len;
-	unsigned char *keys = NULL;
+	char *keys = NULL;
 	int keys_len;
 	int ret = 0;
 

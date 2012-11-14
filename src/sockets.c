@@ -18,9 +18,6 @@ do { fprintf(stderr, "[%s ", get_datetime()); fprintf(stderr, "libvirt-php/socke
 do {} while(0)
 #endif
 
-/* Function macro */
-#define	PHPFUNC	__FUNCTION__
-
 /*
 	Private function name:	connect_socket
 	Since version:		0.4.2
@@ -197,9 +194,8 @@ void socket_read(int sfd, long length)
 int socket_read_and_save(int sfd, char *fn, long length)
 {
 	int fd, i;
-        long len = 0;
-	long orig_len = length;
-        unsigned char bigbuf[1048576];
+    long len = 0, orig_len = length;
+    unsigned char bigbuf[1048576];
 
 	if (fn == NULL)
 		return -ENOENT;
@@ -210,8 +206,8 @@ int socket_read_and_save(int sfd, char *fn, long length)
 		return -EPERM;
 
         if (socket_has_data(sfd, 50000, 0) != 1) {
-                DPRINTF("%s: No data appears to be available\n", PHPFUNC);
-                return -ENOENT;
+            DPRINTF("%s: No data appears to be available\n", PHPFUNC);
+            return -ENOENT;
         }
 
         DPRINTF("%s: Reading %ld bytes\n", PHPFUNC, length);
