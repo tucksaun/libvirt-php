@@ -18,6 +18,8 @@ do { fprintf(stderr, "[%s ", get_datetime()); fprintf(stderr, "libvirt-php/socke
 do {} while(0)
 #endif
 
+#define PHPFUNC __FUNCTION__
+
 /*
 	Private function name:	connect_socket
 	Since version:		0.4.2

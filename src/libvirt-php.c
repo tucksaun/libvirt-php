@@ -25,6 +25,9 @@ do { fprintf(stderr, "[%s ", get_datetime()); fprintf(stderr, "libvirt-php/core 
 do {} while(0)
 #endif
 
+/* PHP functions are prefixed with `zif_` so strip it */
+#define PHPFUNC (__FUNCTION__ + 4)
+
 /* Additional binaries */
 char *features[] = { "screenshot", "create-image", NULL };
 char *features_binaries[] = { "/usr/bin/gvnccapture", "/usr/bin/qemu-img", NULL };

@@ -10,7 +10,4 @@ extern int gdebug;
 #define DEBUG_SOCKETS
 #endif
 
-/* PHP functions are prefixed with `zif_` so strip it */
-#define PHPFUNC (__FUNCTION__ + 4)
-
 #endif
