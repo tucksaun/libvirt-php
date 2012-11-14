@@ -1,10 +1,16 @@
 #ifndef LIBVIRT_ARCH_H
 #define LIBVIRT_ARCH_H
 
-#ifdef __BIG_ENDIAN
-#define IS_BIGENDIAN  1
-#else
+
+#ifdef __APPLE__
+#ifdef __LITTLE_ENDIAN__
 #define IS_BIGENDIAN  0
+#else
+#define IS_BIGENDIAN  1
+#endif
+#else
+#include <stdint.h>
+#define IS_BIGENDIAN (*(uint16_t *)"\0\xff" < 0x100)
 #endif
 
 #define SWAP2_BY_ENDIAN(le, v1, v2) (((le && IS_BIGENDIAN) || (!le && !IS_BIGENDIAN)) ? ((v2 << 8) + v1) : ((v1 << 8) + v2))
