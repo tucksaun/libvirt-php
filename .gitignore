@@ -25,3 +25,4 @@ missing
 mkinstalldirs
 run-tests.php
 tools/generate-api-docs
+tools/generate-api-docs.dSYM

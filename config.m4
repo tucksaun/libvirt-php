@@ -1,17 +1,22 @@
 dnl config.m4 for extension libvirt-php
 AC_DEFUN([AC_INIT], [
+  PACKAGE="$1"
   VERSION="$2"
+  URL="$3"
 
-  AC_DEFINE_UNQUOTED([PACKAGE], ["$1"], [Name of package])
-  AC_DEFINE_UNQUOTED([VERSION], ["$2"], [Version number of package])
+  PHP_SUBST(PACKAGE)
+  PHP_SUBST(VERSION)
 
-  AC_DEFINE_UNQUOTED([PACKAGE_NAME], ["$1"], [Define to the full name of this package])
-  AC_DEFINE_UNQUOTED([PACKAGE_VERSION], ["$2"], [Define to the version of this package.])
+  AC_DEFINE_UNQUOTED([PACKAGE], ["$PACKAGE"], [Name of package])
+  AC_DEFINE_UNQUOTED([VERSION], ["$VERSION"], [Version number of package])
 
-  AC_DEFINE_UNQUOTED([PACKAGE_STRING], ["$1 $2"], [Define to the full name and version of this package.])
+  AC_DEFINE_UNQUOTED([PACKAGE_NAME], ["$PACKAGE"], [Define to the full name of this package])
+  AC_DEFINE_UNQUOTED([PACKAGE_VERSION], ["$VERSION"], [Define to the version of this package.])
 
-  AC_DEFINE_UNQUOTED([PACKAGE_URL], ["$3"], [Define to the home page for this package.])
-  AC_DEFINE_UNQUOTED([PACKAGE_BUGREPORT], ["$3"], [Define to the address where bug reports for this package should be sent.])
+  AC_DEFINE_UNQUOTED([PACKAGE_STRING], ["$PACKAGE $VERSION"], [Define to the full name and version of this package.])
+
+  AC_DEFINE_UNQUOTED([PACKAGE_URL], ["$URL"], [Define to the home page for this package.])
+  AC_DEFINE_UNQUOTED([PACKAGE_BUGREPORT], ["$URL"], [Define to the address where bug reports for this package should be sent.])
 ])
 
 AC_INIT([libvirt-php], [0.4.6], [http://libvirt.org/php.html])
@@ -94,12 +99,30 @@ fi
 
 TOOLS_DIR="tools"
 DOC_DIR="docs"
-SUBDIRS="$TOOLS_DIR $DOC_DIR"
+SRC_DIR="src"
+SUBDIRS="\$(TOOLS_DIR) \$(DOC_DIR) \$(SRC_DIR)"
+DIST_COMMON="README \$(am__configure_deps) \
+  AUTHORS COPYING ChangeLog NEWS install-sh missing"
+DIST_SOURCES="config.m4 Makefile.frag \$(DOC_DIR) \$(SRC_DIR) tests"
+DISTFILES="\$(DIST_COMMON) \$(DIST_SOURCES) \$(TEXINFOS) \$(EXTRA_DIST)"
 EXTRA_DIST="libvirt-php.spec.in"
+distdir="\$(PACKAGE)-\$(VERSION)"
 PHP_SUBST(TOOLS_DIR)
 PHP_SUBST(DOC_DIR)
+PHP_SUBST(SRC_DIR)
 PHP_SUBST(SUBDIRS)
+PHP_SUBST(DIST_COMMON)
+PHP_SUBST(DIST_SOURCES)
+PHP_SUBST(DISTFILES)
 PHP_SUBST(EXTRA_DIST)
+PHP_SUBST(distdir)
+
+GZIP_ENV="--best"
+DIST_ARCHIVES="\$(distdir).tar.gz"
+DIST_TARGETS="dist-gzip"
+PHP_SUBST(GZIP_ENV)
+PHP_SUBST(DIST_ARCHIVES)
+PHP_SUBST(DIST_TARGETS)
 
 PHP_NEW_EXTENSION(libvirt, src/libvirt-php.c src/sockets.c src/vncfunc.c, $ext_shared)
 
