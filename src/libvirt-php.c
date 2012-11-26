@@ -2252,7 +2252,7 @@ char *get_string_from_xpath(char *xml, char *xpath, zval **val, int *retVal)
 				@binary [string]: output binary string with the binary interpretation
 	Returns:		None
 */
-void dec_to_bin(unsigned long long decimal, char *binary)
+void dec_to_bin(long long decimal, char *binary)
 {
 	int  k = 0, n = 0;
 	int  neg_flag = 0;

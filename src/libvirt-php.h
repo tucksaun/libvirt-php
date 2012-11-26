@@ -31,6 +31,7 @@
 #define	VIR_VERSION_LIBVIRT		2
 
 #include "common.h"
+#include <libgen.h>
 
 #ifdef ZTS
 #include "TSRM.h"
