@@ -8,13 +8,15 @@
     <h2><a name="compiling">Compiling a release tarball</a></h2>
 
     <p>
-      libvirt-php is using the standard configure/make/make install steps:
+      libvirt-php is using the standard phpize/configure/make/make install steps:
     </p>
 
     <pre>
       $ gunzip -c libvirt-php-x.x.x.tar.gz | tar xvf -
       $ cd libvirt-php-x.x.x
-      $ ./configure</pre>
+      $ phpize
+      $ ./configure
+    </pre>
 
     <p>
       The <i>configure</i> script can be given options to change its default
@@ -48,6 +50,7 @@
     </p>
 
     <pre>
+      $ phpize
       $ ./configure <i>[possible options]</i>
       $ make
       $ <b>sudo</b> <i>make install</i></pre>
@@ -59,15 +62,16 @@
     <h2><a name="building">Building from a GIT checkout</a></h2>
 
     <p>
-      The libvirt-php build process uses GNU autotools, so after obtaining a
+      The libvirt-php build process uses phpize, so after obtaining a
       checkout it is necessary to generate the configure script and Makefile.in
-      templates using the <code>autogen.sh</code> command, passing the extra
-      arguments as for configure. As an example, to do a complete build and
+      templates using the <code>phpize</code> command.
+      As an example, to do a complete build and
       install it into your home directory run:
     </p>
 
     <pre>
-      $ ./autogen.sh
+      $ phpize
+      $ ./configure
       $ make
       $ <b>sudo</b> make install</pre>
   </body>
