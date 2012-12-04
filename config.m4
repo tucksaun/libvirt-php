@@ -72,26 +72,30 @@ fi
 
 
 if test "$PHP_LIBVIRT" != "no"; then
-  if test -r $PHP_LIBVIRT/lib/libvirt.a; then
+  if test -r $PHP_LIBVIRT/libvirt.a || test -r $PHP_LIBVIRT/libvirt.so; then
     LIBVIRT_DIR=$PHP_LIBVIRT
   else
     AC_MSG_CHECKING(for libvirt in default path)
-    for i in /usr/local /usr; do
-      if test -r $i/lib/libvirt.a; then
+    for i in /usr/local/lib64 /usr/lib64 /usr/local/lib /usr/lib; do
+      if test -r $i/libvirt.a; then
         LIBVIRT_DIR=$i
-        AC_MSG_RESULT(found in $i)
+        AC_MSG_RESULT(found in $i as static library)
+      fi
+      if test -r $i/libvirt.so; then
+        LIBVIRT_DIR=$i
+        AC_MSG_RESULT(found in $i as shared object)
       fi
     done
   fi
 
   if test -z "$LIBVIRT_DIR"; then
     AC_MSG_RESULT(not found)
-    AC_MSG_ERROR(Please reinstall the libvirt distribution - libvirt.h should be in <libvirt-dir>/include and libvirt.h should be in <libvirt-dir>/lib)
+    AC_MSG_ERROR(Please reinstall the libvirt distribution - libvirt.[a|so] should be in <libvirt-dir> and libvirt.h should be in <libvirt-dir>/../include)
   fi
-  PHP_ADD_INCLUDE($LIBVIRT_DIR/include)
+  PHP_ADD_INCLUDE($LIBVIRT_DIR/../include)
 
   PHP_SUBST(LIBVIRT_SHARED_LIBADD)
-  PHP_ADD_LIBRARY_WITH_PATH(virt, $LIBVIRT_DIR/lib, LIBVIRT_SHARED_LIBADD)
+  PHP_ADD_LIBRARY_WITH_PATH(virt, $LIBVIRT_DIR, LIBVIRT_SHARED_LIBADD)
 
   dnl AC_DEFINE(HAVE_LIBVIRT, 1, [Whether you want libvirt support])
 
