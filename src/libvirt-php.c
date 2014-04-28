@@ -3670,7 +3670,7 @@ PHP_FUNCTION(libvirt_domain_get_screenshot)
 	int port = -1;
 	char *hostname = NULL;
 	int hostname_len;
-	int scancode = 10;
+	long scancode = 10;
 	char *path;
 	char name[1024] = { 0 };
 	int use_builtin = 0;
