@@ -2716,7 +2716,7 @@ long get_next_free_numeric_value(virDomainPtr domain, char *xpath)
 			zend_hash_move_forward_ex(arr_hash, &pointer)) {
 			if (Z_TYPE_PP(data) == IS_STRING) {
 				if (zend_hash_get_current_key_ex(arr_hash, &key, &key_len, &index, 0, &pointer) != HASH_KEY_IS_STRING) {
-					long num = -1;
+					unsigned int num = -1;
 
 					sscanf(Z_STRVAL_PP(data), "%x", &num);
 					if (num > max_slot)
