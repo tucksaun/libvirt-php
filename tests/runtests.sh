@@ -39,7 +39,9 @@ do
 	fi
 done
 
-qemu-img create -f qcow2 /tmp/example-test.qcow2 1M > /dev/null
+if [ "x`which qemu-img`" != "x" ]; then
+	qemu-img create -f qcow2 /tmp/example-test.qcow2 1M > /dev/null
+fi
 run_test "test-domain-snapshot" $nf; ret="$?"
 if [ "x$ret" == "x1" ]; then
 	error=1

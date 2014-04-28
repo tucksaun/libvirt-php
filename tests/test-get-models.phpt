@@ -1,6 +1,9 @@
 <?php
 	require_once('functions.phpt');
 
+	if (exec("which libvirtd") === '')
+		testskip(basename(__FILE__));
+
 	$conn = libvirt_connect(NULL);
 	if (!is_resource($conn))
 		bail('Connection to default hypervisor failed');
