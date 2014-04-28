@@ -4641,7 +4641,7 @@ PHP_FUNCTION(libvirt_domain_get_interface_devices)
 */
 PHP_FUNCTION(libvirt_domain_change_vcpus)
 {
-	int numCpus, flags = 0;
+	long numCpus, flags = 0;
 	php_libvirt_domain *domain=NULL;
 	zval *zdomain;
 
