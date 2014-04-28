@@ -3675,12 +3675,6 @@ PHP_FUNCTION(libvirt_domain_get_screenshot)
 	char name[1024] = { 0 };
 	int use_builtin = 0;
 
-	path = get_feature_binary("screenshot");
-	DPRINTF("%s: get_feature_binary('screenshot') returned %s\n", PHPFUNC, path);
-
-	if ((path == NULL) || (access(path, X_OK) != 0))
-		use_builtin = 1;
-
 	GET_DOMAIN_FROM_ARGS("rs|l",&zdomain, &hostname, &hostname_len, &scancode);
 
 	xml=virDomainGetXMLDesc(domain->domain, 0);
@@ -3704,6 +3698,12 @@ PHP_FUNCTION(libvirt_domain_get_screenshot)
 		hostname = strdup("localhost");
 
 	vnc_refresh_screen(hostname, tmp, scancode);
+
+	path = get_feature_binary("screenshot");
+	DPRINTF("%s: get_feature_binary('screenshot') returned %s\n", PHPFUNC, path);
+
+	if ((path == NULL) || (access(path, X_OK) != 0))
+		use_builtin = 1;
 
 	if (use_builtin == 1) {
 		DPRINTF("%s: Binary not found, using builtin approach to %s:%s, tmp file = %s\n", PHPFUNC, hostname, tmp, file);
