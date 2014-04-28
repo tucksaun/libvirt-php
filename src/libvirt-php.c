@@ -1335,7 +1335,7 @@ PHP_MSHUTDOWN_FUNCTION(libvirt)
 		RETURN_FALSE;\
 	}\
 \
-	ZEND_FETCH_RESOURCE(conn, php_libvirt_connection*, &zconn, -1, PHP_LIBVIRT_CONNECTION_RES_NAME, le_libvirt_connection);\
+	ZEND_FETCH_RESOURCE_NO_RETURN(conn, php_libvirt_connection*, &zconn, -1, PHP_LIBVIRT_CONNECTION_RES_NAME, le_libvirt_connection);\
 	if ((conn==NULL) || (conn->conn==NULL)) RETURN_FALSE;\
 
 #define GET_DOMAIN_FROM_ARGS(args, ...) \
@@ -1345,7 +1345,7 @@ PHP_MSHUTDOWN_FUNCTION(libvirt)
 		RETURN_FALSE;\
 	}\
 \
-	ZEND_FETCH_RESOURCE(domain, php_libvirt_domain*, &zdomain, -1, PHP_LIBVIRT_DOMAIN_RES_NAME, le_libvirt_domain);\
+	ZEND_FETCH_RESOURCE_NO_RETURN(domain, php_libvirt_domain*, &zdomain, -1, PHP_LIBVIRT_DOMAIN_RES_NAME, le_libvirt_domain);\
 	if ((domain==NULL) || (domain->domain==NULL)) RETURN_FALSE;\
 
 #define GET_NETWORK_FROM_ARGS(args, ...) \
@@ -1355,7 +1355,7 @@ PHP_MSHUTDOWN_FUNCTION(libvirt)
 		RETURN_FALSE;\
 	}\
 \
-	ZEND_FETCH_RESOURCE(network, php_libvirt_network*, &znetwork, -1, PHP_LIBVIRT_NETWORK_RES_NAME, le_libvirt_network);\
+	ZEND_FETCH_RESOURCE_NO_RETURN(network, php_libvirt_network*, &znetwork, -1, PHP_LIBVIRT_NETWORK_RES_NAME, le_libvirt_network);\
 	if ((network==NULL) || (network->network==NULL)) RETURN_FALSE;\
 
 #define GET_NODEDEV_FROM_ARGS(args, ...) \
@@ -1365,7 +1365,7 @@ PHP_MSHUTDOWN_FUNCTION(libvirt)
 		RETURN_FALSE;\
 	}\
 \
-	ZEND_FETCH_RESOURCE(nodedev, php_libvirt_nodedev*, &znodedev, -1, PHP_LIBVIRT_NODEDEV_RES_NAME, le_libvirt_nodedev);\
+	ZEND_FETCH_RESOURCE_NO_RETURN(nodedev, php_libvirt_nodedev*, &znodedev, -1, PHP_LIBVIRT_NODEDEV_RES_NAME, le_libvirt_nodedev);\
 	if ((nodedev==NULL) || (nodedev->device==NULL)) RETURN_FALSE;\
 
 #define GET_STORAGEPOOL_FROM_ARGS(args, ...) \
@@ -1375,7 +1375,7 @@ PHP_MSHUTDOWN_FUNCTION(libvirt)
 		RETURN_FALSE;\
 	}\
 \
-	ZEND_FETCH_RESOURCE(pool, php_libvirt_storagepool*, &zpool, -1, PHP_LIBVIRT_STORAGEPOOL_RES_NAME, le_libvirt_storagepool);\
+	ZEND_FETCH_RESOURCE_NO_RETURN(pool, php_libvirt_storagepool*, &zpool, -1, PHP_LIBVIRT_STORAGEPOOL_RES_NAME, le_libvirt_storagepool);\
 	if ((pool==NULL) || (pool->pool==NULL)) RETURN_FALSE;\
 
 #define GET_VOLUME_FROM_ARGS(args, ...) \
@@ -1385,7 +1385,7 @@ PHP_MSHUTDOWN_FUNCTION(libvirt)
 		RETURN_FALSE;\
 	}\
 \
-	ZEND_FETCH_RESOURCE(volume, php_libvirt_volume*, &zvolume, -1, PHP_LIBVIRT_VOLUME_RES_NAME, le_libvirt_volume);\
+	ZEND_FETCH_RESOURCE_NO_RETURN(volume, php_libvirt_volume*, &zvolume, -1, PHP_LIBVIRT_VOLUME_RES_NAME, le_libvirt_volume);\
 	if ((volume==NULL) || (volume->volume==NULL)) RETURN_FALSE;\
 
 #if LIBVIR_VERSION_NUMBER>=8000
@@ -1397,7 +1397,7 @@ PHP_MSHUTDOWN_FUNCTION(libvirt)
 		RETURN_FALSE;\
 	}\
 \
-	ZEND_FETCH_RESOURCE(snapshot, php_libvirt_snapshot*, &zsnapshot, -1, PHP_LIBVIRT_SNAPSHOT_RES_NAME, le_libvirt_snapshot);\
+	ZEND_FETCH_RESOURCE_NO_RETURN(snapshot, php_libvirt_snapshot*, &zsnapshot, -1, PHP_LIBVIRT_SNAPSHOT_RES_NAME, le_libvirt_snapshot);\
 	if ((snapshot==NULL) || (snapshot->snapshot==NULL)) RETURN_FALSE;\
 
 #endif
@@ -3501,9 +3501,6 @@ PHP_FUNCTION(libvirt_domain_get_name)
 	const char *name=NULL;
 
 	GET_DOMAIN_FROM_ARGS("r",&zdomain);
-
-	if (domain->domain == NULL)
-		RETURN_FALSE;
 
 	name = virDomainGetName(domain->domain);
 	DPRINTF("%s: virDomainGetName(%p) returned %s\n", PHPFUNC, domain->domain, name);
